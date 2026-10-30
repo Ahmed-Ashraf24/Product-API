@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
-data class Product(val id: Int, val name: String, val price: Double)
-
+data class Product(val id: Int?=null, val name: String, val price: Double)
+fun Product.toProductEntity(): ProductEntity = ProductEntity(id, name, price)
 @RestController
 class ItemsController(private val productsService: ProductsService) {
     @GetMapping("/product")
@@ -31,7 +31,7 @@ class ItemsController(private val productsService: ProductsService) {
     }
     @PostMapping("/product")
     fun addProduct(@RequestBody newProduct: Product):Product {
-        productsService.addProduct(newProduct).fold(
+        productsService.addProduct(newProduct.copy(id = null)).fold(
             onSuccess = {product->
                 return product
             }

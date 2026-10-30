@@ -17,5 +17,8 @@ class ProductExceptionHandler {
     fun handleNotFound(exception: ProductExceptions.ProductNotExistException): ResponseEntity<String> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.message)
     }
-
+    @ExceptionHandler(ProductExceptions.NullProductIdException::class)
+    fun handleNullId(exception: ProductExceptions.NullProductIdException): ResponseEntity<String> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.message)
+    }
 }
