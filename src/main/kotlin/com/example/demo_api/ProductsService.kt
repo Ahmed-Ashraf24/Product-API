@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service
 
 
 @Service
-class ProductsService(val productRepository: ProductRepository) {
+class ProductsService(private val productRepository: ProductRepository) {
     fun getAllProducts() = productRepository.findAll().map { it.toProduct() }.toList()
     fun updateProduct(newProduct: Product): Result<Product> {
 
@@ -18,6 +18,10 @@ class ProductsService(val productRepository: ProductRepository) {
             return Result.failure(
                 ProductExceptions.ProductNotExistException("Product with id ${newProduct.id} does not exist.")
             )
+        }
+        val existingProduct = productRepository.findByName(newProduct.name)
+        if(existingProduct!=null&&existingProduct.id!=newProduct.id) {
+            return Result.failure(ProductExceptions.DuplicateProductException("Product with name ${newProduct.name} already exist."))
         }
         val savedProduct = productRepository.save(newProduct.toProductEntity())
         return Result.success(savedProduct.toProduct())
