@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController
 data class Product(
     val id: Int? = null,
     @field:NotBlank(message = "the name must not be blank") val name: String,
-    @field:PositiveOrZero("the price must be >= 0") val price: Double
+    @field:PositiveOrZero("the price must be >= 0") val price: Double,
+    val imageUrl:String?=null
 )
 
-fun Product.toProductEntity(): ProductEntity = ProductEntity(id, name, price)
+fun Product.toProductEntity(): ProductEntity = ProductEntity(id, name, price,imageUrl)
 
 @RestController
 class ItemsController(private val productsService: ProductsService) {
